@@ -1,3 +1,5 @@
+import account.Account;
+import account.PayrollAccount;
 import atm.AtmBank;
 import card.Card;
 import card.CreditCard;
@@ -16,5 +18,7 @@ public class Main {
         card.setThruAt(card.getIssuedAt().plusYears(2));
         card.setLimitExpense(5000.00);
         atmBank.plugInCard(card);
+        atmBank.doWithdrawal();
+        atmBank.doDeposit();
     }
 }

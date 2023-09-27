@@ -1,8 +1,9 @@
 package account;
 
 import card.Card;
+import util.IO;
 
-public abstract class Account {
+public abstract class Account implements Transaction {
     private Integer id;
     private String owner;
     private Double balance;
@@ -38,5 +39,20 @@ public abstract class Account {
 
     public void setCard(Card card) {
         this.card = card;
+    }
+
+    @Override
+    public Double withdrawal(Double amount) {
+        if (amount > balance) {
+            IO.error("Insufficient balance..!");
+            return null;
+        }
+        balance -= amount;
+        return amount;
+    }
+
+    @Override
+    public void deposit(Double amount) {
+        balance += amount;
     }
 }

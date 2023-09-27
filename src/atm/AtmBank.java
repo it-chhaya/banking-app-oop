@@ -63,6 +63,7 @@ public class AtmBank implements AtmFeature {
             Integer atmPin = IO.getInteger("Enter pin: ");
             if (atmPin.equals(card.getPin())
                     && LocalDate.now().isBefore(card.getThruAt())) {
+                card.setAccount(accounts[1]);
                 this.card = card;
                 IO.info("You have plugged card successfully.");
                 IO.info("Enjoy doing your transaction.");
@@ -74,17 +75,40 @@ public class AtmBank implements AtmFeature {
 
     @Override
     public void plugOutCard() {
+        this.card = null;
 
     }
 
     @Override
     public void doWithdrawal() {
-
+        if (card != null) {
+            Double amount = IO.getDecimal("Enter amount to withdrawal:");
+            if (amount > card.getLimitExpense()) {
+                IO.error("Limit expense..!");
+                return;
+            }
+            card.getAccount().withdrawal(amount);
+            IO.info("*".repeat(16));
+            IO.info("Account Name: " + card.getAccount().getOwner());
+            IO.info("Current Balance: " + card.getAccount().getBalance());
+            IO.info("*".repeat(16));
+            return;
+        }
+        IO.error("Invalid card..!");
     }
 
     @Override
     public void doDeposit() {
-
+        if (card != null) {
+            Double amount = IO.getDecimal("Enter amount to deposit: ");
+            card.getAccount().deposit(amount);
+            IO.info("*".repeat(16));
+            IO.info("Account Name: " + card.getAccount().getOwner());
+            IO.info("Current Balance: " + card.getAccount().getBalance());
+            IO.info("*".repeat(16));
+            return;
+        }
+        IO.error("Invalid card..!");
     }
     @Override
     public void doECash() {
